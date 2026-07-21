@@ -1,0 +1,22 @@
+{
+    "name": "Kindsberg Marketing",
+    "short_name": "Kindsberg",
+    "description": "The digital sales channel for project developers, capital-investment sales teams and estate agents.",
+    "start_url": "/",
+    "display": "browser",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/assets/manifest/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/manifest/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#0f3852",
+    "background_color": "#0f3852"
+}

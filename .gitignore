@@ -1,0 +1,10 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+
+# Vercel: link metadata, plus the OIDC token `vercel link` writes to .env.local
+.vercel
+.env*
+
+# Deps (none today, but keep the door shut)
+node_modules/

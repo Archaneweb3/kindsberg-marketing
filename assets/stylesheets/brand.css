@@ -1,0 +1,526 @@
+/* Kindsberg brand layer.
+ *
+ * Vendor sheets (global.css, landing.css, about.css) are re-downloaded from
+ * the Ever source and get clobbered when that happens, so nothing
+ * brand-specific may live in them. It goes here, and this file loads last.
+ */
+
+/* The hero used to carry a navy blend scrim here, to drag a golden-hour photo
+ * onto a palette with no warm side. The hero art is blue-hour now and sits on
+ * the palette on its own, so the scrim was removed rather than left to mute
+ * the lit windows it exists to contrast against.
+ *
+ * Re-grading is the wrong reflex if a photo fights the palette: shoot or
+ * generate it at blue hour instead. A scrim is what you reach for when the
+ * source can't be changed.
+ */
+
+/* Rotated "Surroundings" title overflows the viewport.
+ *
+ * landing.css sizes it off viewport height, not text length -- .312 on
+ * .location__title--large, .315 on the bare .location__title -- and
+ * .location--en scales the wrap a further 1.13x. The title is rotated -90deg,
+ * so its length runs along the height, the one axis the size is pegged to.
+ * That only holds while the word stays short.
+ *
+ * Measured in KindsbergSans Medium: "Location" is 4.26em and "Grounds" 4.20em,
+ * which those factors were evidently tuned for. "Surroundings" is 6.36em, so
+ * .312 * 1.13 * 6.36 = 2.24x the viewport height and over half the word runs
+ * off-screen.
+ *
+ * Both states need capping, not just --large: the scroll timeline in
+ * landing.js does removeClass "location__title--large" on location ->
+ * location-content and tweens font-size across it, so capping only --large
+ * makes the title jump *up* to the uncapped .315 mid-scroll.
+ *
+ * Hence the selector is .location__title, which holds whether or not --large
+ * is present, at 0,2,0 to outrank both vendor rules (0,1,0). Equal values in
+ * both states make the font-size leg of that tween a no-op; letter-spacing and
+ * colour still animate.
+ *
+ * The 1.13 wrap scale multiplies whatever is set here, so the fit limit is
+ * 1 / (6.36 * 1.13) = .139, not 1 / 6.36. .132 leaves a margin for font
+ * fallback and sub-pixel rounding. Keep the vw arm so narrow viewports still
+ * clamp. If the word is ever shortened, delete this rule -- the vendor formulas
+ * handle a ~4em word correctly on their own.
+ */
+.location--en .location__title {
+    font-size: min(calc(var(--layout-height) * 0.132), calc(var(--layout-width) * 0.182));
+}
+
+/* Contact-modal title runs under the form panel.
+ *
+ * Same failure as the rotated title above, for the same reason: .h2 sizes off
+ * the viewport, not off the text, so it only holds while the word stays short.
+ * The Russian original was "Заказать звонок"; the English rebrand made it "Book
+ * a consultation", and "consultation" is ~6.9em wide -- long enough to run past
+ * the form panel and get hidden behind it.
+ *
+ * The title is position:fixed at the left, the panel is on the right, so the
+ * space for it is (panel left edge - title left edge). Measured, in px:
+ *
+ *      vw     .h2     space   longest that fits
+ *      1280    96      654     88.8      <- clipped
+ *      1440   108      740    103.9      <- clipped
+ *      1600   108      817    114.7         ok
+ *      1920   160      970    141.3      <- clipped
+ *      2560   160     1590    231.6         ok
+ *
+ * .h2's steps (fluid to 1440, then 10.8rem, then 16rem at 1920) do not track
+ * that space, because the panel has a max-width and stops growing while the type
+ * keeps going. Hence it fits at 1600 and 2560 but clips at the common laptop
+ * widths in between -- which is why this looked fine while it was broken.
+ *
+ * So the fix is one fluid ramp that tracks the space instead of the vendor's
+ * steps. The 16rem arm keeps the vendor's own ceiling: without it the fluid arm
+ * would overtake .h2 past ~2400px and make the title BIGGER than designed.
+ * Net effect is shrink-only -- roughly -12% at 1280/1440, -2% at 1600, -21% at
+ * 1920, unchanged at 2560.
+ *
+ * vw here, NOT --layout-width like the rule above. --layout-width is defined on
+ * .layout, and the modals live in .js-modal at the end of <body>, outside it. An
+ * undefined var makes the calc() invalid, which drops the whole font-size
+ * declaration -- and font-size then INHERITS, so the title silently rendered at
+ * body's 20px instead of ~130px. It still "fit", which is why a check that only
+ * asserted no-overflow passed while the title was in fact destroyed. Any test of
+ * this rule has to bound the font-size from below as well as above.
+ *
+ * 6.6% rather than the 6.934% the 1280 measurement allows. Two reasons: 100vw
+ * counts the scrollbar and innerWidth does not, so vw slightly overstates the
+ * real space; and 1280 is not actually the tightest case -- at 6.8% the title
+ * cleared the panel at 1024 by only 2px, which is inside the noise of a font
+ * fallback. 6.6% pulls that back to a real margin and costs 2% at 1600.
+ *
+ * Scoped .contact-form-title.h2 (0,2,0) to outrank .h2 (0,1,0) regardless of
+ * sheet order. Applies to every contact modal -- callback, assessment,
+ * order-taxi -- all of which share this title.
+ */
+.contact-form-title.h2 {
+    font-size: min(6.6vw, 16rem);
+}
+
+/* Retire the deco overlays whose subject died with the residential project.
+ *
+ * The floating deco PNGs split cleanly in two once the site stopped selling
+ * apartments:
+ *
+ *   - Abstract sculpture formerly kept -- ribbed cylinder / crystal
+ *     (architecture), glass rings (interior), stone torus and mobius
+ *     (territory__deco-1/-2). Architecture, interior, and Why Us / territory
+ *     sculpture are now all hidden on request.
+ *
+ *   - Subject matter from the old brief -- oak leaves, eucalyptus and pine
+ *     (location + territory slide 1), the table-tennis bats that illustrated the
+ *     "Sport" slide now titled "Proven", and the vase and pendant lamp beside
+ *     "Compare". On an agency page these are simply wrong, and no amount of
+ *     recolouring fixes a leaf.
+ *
+ * The menu banners are NOT in either group and must not be hidden here. Their
+ * artwork is a cutout floating over a CSS oval drawn by
+ * .menu__banner__image__wrapper:before, and that oval is not hidden with it --
+ * so hiding the cutout leaves a bare white ellipse rather than a clean panel.
+ * They were sofa / car / storage boxes selling flats and parking; they have been
+ * re-shot as a consultation setup and an assessment report instead.
+ *
+ * They are hidden rather than deleted: every one is aria-hidden, absolutely
+ * positioned and purely ornamental, so display:none removes them without
+ * shifting a single element of the layout the brief said to keep. The markup and
+ * the PNGs are left in place so this is one rule to revert.
+ *
+ * Note .territory__deco-1 and .territory__deco-1-1 are different classes --
+ * both are hidden now (main sculpture + slide botanicals). Keep selectors
+ * exact; do not shorten to a prefix match.
+ */
+.architecture__deco-1,
+.architecture__deco-2,
+.interior__deco,
+.location__deco-1,
+.location__deco-2,
+.location__deco-3,
+.location__deco-4,
+.location__deco-5,
+.location__deco-6,
+.location__deco-7,
+.location__deco-8,
+.location__deco-mob-1,
+.location__deco-mob-2,
+.location__deco-mob-3,
+.location__deco-mob-4,
+.territory__deco-1,
+.territory__deco-2,
+.territory__deco-1-1,
+.territory__deco-1-2,
+.territory__deco-4-1,
+.apartments__deco-1,
+.apartments__deco-2 {
+    display: none !important;
+}
+
+/* The storage-box cutout stacked on the second banner is the one menu asset with
+ * no replacement: it read as "storage room" next to the car, and an assessment
+ * panel has nothing to stack. The banner keeps its own artwork; only the extra
+ * decor layer goes.
+ */
+.menu__banner__image__decor {
+    display: none !important;
+}
+
+/* about.html: hide all ornamental deco (spheres, rings, leaves, armchair, etc.).
+ *
+ * Keep .about-houses__deco exact — do not broaden to a prefix that would also
+ * hit .about-flats__gallery__control__image (a real gallery control).
+ */
+.about-intro__deco,
+.about-intro__deco-1,
+.about-intro__deco-2,
+.about-intro-2__info__building,
+.features-sticky__deco,
+.about-architecture__mobile-tabs__deco,
+.about-tabs__deco,
+.about-atmosphere__title__rings,
+.about-atmosphere__elipsis,
+.about-outro__deco-1,
+.about-outro__deco-2,
+.about-houses__deco {
+    display: none !important;
+}
+
+/* Hairlines under atmosphere after cards/row removed */
+.about-atmosphere:after {
+    border: none !important;
+    content: none !important;
+}
+
+/* YEARS INSIDE… — tighten row after removing building / photo column */
+@media only screen and (min-width: 980px) {
+    .about-intro-2__info {
+        justify-content: flex-start !important;
+    }
+
+    .about-intro-2__info__col {
+        flex-basis: auto !important;
+        flex: 1 1 0 !important;
+        min-width: 0;
+    }
+
+    .about-intro-2__info__col:has(.about-intro-2__info__number) {
+        flex: 0 0 auto !important;
+        border-left: none !important;
+        padding-left: 0 !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Work with us — navy bg, centered title, clear gap from image               */
+/* -------------------------------------------------------------------------- */
+#work-with-us.about-outro {
+    background-color: var(--c-cold-3, #0f3852) !important;
+}
+
+#work-with-us .about-outro__content {
+    align-items: center;
+    text-align: center;
+}
+
+#work-with-us .about-outro__title {
+    left: auto !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 20px !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+#work-with-us .about-outro__title span {
+    margin-left: 0 !important;
+    white-space: normal;
+    text-align: center;
+}
+
+#work-with-us .about-outro__hr {
+    display: none !important;
+}
+
+#work-with-us .about-outro__background {
+    top: 0 !important;
+    margin-top: 20px !important;
+    margin-bottom: calc(var(--spacing-l) * 1.25) !important;
+    width: min(92%, 56rem) !important;
+    position: relative;
+    z-index: 1;
+}
+
+#work-with-us .about-outro__text {
+    margin-top: 0 !important;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    margin-bottom: calc(var(--spacing-l) * 1.25) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    box-sizing: border-box;
+    font-size: calc(2rem * 0.9) !important;
+    line-height: 1.2 !important;
+}
+
+@media only screen and (min-width: 980px) {
+    #work-with-us .about-outro__background {
+        width: min(72%, 62rem) !important;
+    }
+
+    #work-with-us .about-outro__text {
+        margin-left: 20px !important;
+        margin-right: 20px !important;
+        font-size: calc(4rem * 0.9) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #work-with-us .about-outro__text {
+        margin-left: 20px !important;
+        margin-right: 20px !important;
+        font-size: calc(5.4rem * 0.9) !important;
+    }
+}
+
+/* Kill the ~15px horizontal scrollbar that appears on the About page.
+ *
+ * about.css sizes dozens of full-bleed elements in viewport units -- the grid's
+ * .col--*-2 / .offset--*-2 are literally width:100vw, and .carousel-owl__side-
+ * background:before, .about-intro-2__info__building and others use 100vw too.
+ * 100vw is the width of the viewport INCLUDING the vertical scrollbar's gutter,
+ * whereas the actual content box is (viewport - scrollbar). So the moment a real,
+ * space-taking scrollbar exists, every 100vw element is ~15px wider than the
+ * space it sits in and the page gains a thin horizontal scrollbar. The content
+ * then shifts left by that ~15px -- which is exactly what the header wordmark
+ * clipping at the left edge showed.
+ *
+ * Why it only shows in some views, and why headless testing missed it:
+ *   - Locomotive smooth-scroll (desktop, .has-scroll-smooth on <html>) sets
+ *     html AND body to overflow:hidden and fakes the scroll with a transform, so
+ *     no native scrollbar exists and 100vw == content width. No overflow there.
+ *   - With smooth-scroll off (touch / narrow / native fallback), the document
+ *     scrolls natively, a real vertical scrollbar appears, and the 100vw spill
+ *     turns into a horizontal scrollbar.
+ *   - Chromium's headless/overlay scrollbars take 0px, so clientWidth == 100vw
+ *     and the bug cannot reproduce there -- it needs a classic, space-taking bar
+ *     (Windows desktop), which is where it was reported.
+ *
+ * Fix: clip the horizontal axis so that ~15px of scrollbar-gutter spill can no
+ * longer produce a scroll range. overflow-x:clip, NOT hidden -- clip does not
+ * establish a scroll container, so it cannot break the position:sticky panes this
+ * page relies on (.sticky__sticky, .about-intro__sticky) the way overflow:hidden
+ * on an ancestor would, and it leaves overflow-y untouched so vertical scrolling
+ * is unaffected. The visible full-bleed art still spans the whole content width;
+ * only the sliver that used to hang into the scrollbar gutter is trimmed.
+ *
+ * The wrapper rule does the work in both scroll modes (no vendor rule sets its
+ * overflow-x, so it always applies); the html,body rule is a backstop for the
+ * native mode and stays dormant under smooth-scroll, where the vendor's
+ * .has-scroll-smooth overflow:hidden (0,1,1) outranks it (0,0,1).
+ */
+.page-content-wrapper,
+[data-scroll-container] {
+    overflow-x: clip;
+}
+
+html,
+body {
+    overflow-x: clip;
+}
+
+/* -------------------------------------------------------------------------- */
+/* About: circular image frames → rounded squares (buttons stay round)        */
+/* -------------------------------------------------------------------------- */
+:root {
+    --kb-about-radius: 1.25rem;
+}
+
+/* Photo / media frames that were border-radius: 50% */
+.features-sticky__item__image img,
+.about-atmosphere__elipsis picture img,
+.about-outro__background img,
+.image-comparison,
+.image-comparison__content {
+    border-radius: var(--kb-about-radius) !important;
+}
+
+.features-sticky__item__image,
+.about-atmosphere__elipsis picture,
+.about-outro__background,
+.image-comparison,
+.image-comparison__content {
+    overflow: hidden;
+    overflow: clip;
+}
+
+/* Decorative ellipse rings / blobs → rounded rect */
+.about-atmosphere__card__elipse:after,
+.carousel-card__picture:before {
+    border-radius: var(--kb-about-radius) !important;
+}
+
+/*
+ * About hero: keep a soft “squircle” peek that reads closer to a circle
+ * (large corner radius), not a sharp box. Expands to full-bleed when clipped.
+ */
+.about-intro__background {
+    --kb-hero-radius: min(42vw, 38vh);
+    -webkit-clip-path: inset(14% 24% 18% 24% round var(--kb-hero-radius)) !important;
+    clip-path: inset(14% 24% 18% 24% round var(--kb-hero-radius)) !important;
+}
+
+.about-intro__background img,
+.about-intro__background picture:after {
+    border-radius: var(--kb-hero-radius) !important;
+}
+
+.about-intro__background--clipped {
+    -webkit-clip-path: inset(0) !important;
+    clip-path: inset(0) !important;
+}
+
+.about-intro__background--clipped img,
+.about-intro__background--clipped picture:after {
+    border-radius: 0 !important;
+}
+
+/* Shared frames that also appear on About (menu / layout) */
+.layout__background--rounded,
+.layout__background--rounded img,
+.layout__background--contact,
+.layout__background--contact img {
+    border-radius: var(--kb-about-radius) !important;
+}
+
+.menu__banner__image__wrapper:before {
+    border-radius: var(--kb-about-radius) !important;
+}
+
+/*
+ * service.html (body.page-territory) — navy sections need pure white copy (not Ever cream #DCC5B7 /
+ * warm-1 #f5f7fa). Hero SVG title is SERVICES in #fff.
+ */
+.page-territory .ui-cold-3,
+.page-territory .ui-cold-3-background {
+    /* Text tokens only — keep Ever --t-primary so header hamburger /
+       Solutions outline buttons match index (themed header inherits these). */
+    --t-text: #ffffff;
+    --t-text-rgb: 255, 255, 255;
+    --t-small: #ffffff;
+    --t-small-rgb: 255, 255, 255;
+    --t-accent: #ffffff;
+    --t-accent-rgb: 255, 255, 255;
+    --t-secondary: #ffffff;
+    --t-secondary-rgb: 255, 255, 255;
+    --t-heading: #ffffff;
+    --t-heading-rgb: 255, 255, 255;
+    color: #ffffff;
+}
+
+.page-territory .ui-cold-3 .text--color-secondary,
+.page-territory .ui-cold-3 .text--color-small,
+.page-territory .ui-cold-3 .text--color-text,
+.page-territory .ui-cold-3 .text--color-accent,
+.page-territory .ui-cold-3 .text--color-heading {
+    color: #ffffff !important;
+}
+
+.page-territory .infra-intro__title__text,
+.page-territory .infra-intro__title__subtext,
+.page-territory .infra-text__text {
+    color: #ffffff !important;
+}
+
+.page-territory .infra-intro__title__text svg,
+.page-territory .infra-intro__title__text svg text {
+    fill: #ffffff !important;
+}
+
+.page-territory .kb-services-hero-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/*
+ * Hero media: Ever morphs the intro photo into an ellipse on scroll
+ * (.infra-intro__background--clipped). Keep a larger rounded rectangle.
+ */
+.page-territory {
+    --kb-svc-hero-radius: 1.5rem;
+}
+
+.page-territory .infra-intro {
+    /* Mid size: larger than Ever ellipse (~24×50), smaller than 52×72 */
+    --clip-path-w: 36vw;
+    --clip-path-h: 60vh;
+}
+
+.page-territory .infra-intro__background {
+    -webkit-clip-path: inset(0 round 0) !important;
+    clip-path: inset(0 round 0) !important;
+    border-radius: 0;
+}
+
+.page-territory .infra-intro__background--clipped {
+    -webkit-clip-path: inset(
+        calc(var(--clip-path-y) - var(--clip-path-h) / 2)
+        calc(50% - var(--clip-path-w) / 2)
+        calc(100% - (var(--clip-path-y) + var(--clip-path-h) / 2))
+        calc(50% - var(--clip-path-w) / 2)
+        round var(--kb-svc-hero-radius)
+    ) !important;
+    clip-path: inset(
+        calc(var(--clip-path-y) - var(--clip-path-h) / 2)
+        calc(50% - var(--clip-path-w) / 2)
+        calc(100% - (var(--clip-path-y) + var(--clip-path-h) / 2))
+        calc(50% - var(--clip-path-w) / 2)
+        round var(--kb-svc-hero-radius)
+    ) !important;
+    border-radius: var(--kb-svc-hero-radius);
+}
+
+@media only screen and (min-width: 1440px) {
+    .page-territory .infra-intro {
+        --clip-path-w: 34vw;
+        --clip-path-h: 62vh;
+    }
+}
+
+/* Mobile intro frame (also ellipse by default in infrastructure.css) */
+@media only screen and (max-width: 979px) {
+    .page-territory .infra-intro__background,
+    .page-territory .infra-intro.is-hidden--lg-up .infra-intro__background {
+        -webkit-clip-path: inset(0 round var(--kb-svc-hero-radius)) !important;
+        clip-path: inset(0 round var(--kb-svc-hero-radius)) !important;
+        border-radius: var(--kb-svc-hero-radius);
+        overflow: hidden;
+    }
+}
+
+
+/* territory services: hide deco leftovers */
+.page-territory .infra-intro__deco,
+.page-territory [class*="__deco"],
+.page-territory picture.deco,
+.page-territory .features-sticky__deco,
+.page-territory .sport-sticky__deco-1,
+.page-territory .sport-sticky__deco-2,
+.page-territory .infra-route__deco-1,
+.page-territory .infra-route__deco-2,
+.page-territory .infra-street__deco-1,
+.page-territory .infra-street__deco-2,
+.page-territory .infra-evening__deco,
+.page-territory .infra-engeneering__deco,
+.page-territory .infra-nature__deco,
+.page-territory .infra-sport__mobile__deco-1,
+.page-territory .infra-sport__mobile__deco-2,
+.page-territory .infra-sport__block__deco,
+.page-territory .sport-sticky-block__right__deco {
+    display: none !important;
+}

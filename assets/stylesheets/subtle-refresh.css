@@ -1,0 +1,1167 @@
+/*
+ * Kindsberg — subtle layout refresh
+ *
+ * Hero / Solutions / Process / Compare: Mode A polish.
+ * Global: circular image frames → rounded squares (buttons stay round).
+ * Do not shift layout__part x/w inside the theatre — causes stacked overlaps.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Hero                                                                       */
+/* Desktop split: 50% / 50%                                                   */
+/* Left = building video · Right = people image                               */
+/* -------------------------------------------------------------------------- */
+@media only screen and (min-width: 980px) {
+    .intro__background__left {
+        flex: 0 0 50% !important;
+        max-width: 50%;
+    }
+
+    .intro__background__right {
+        flex: 0 0 50% !important;
+        max-width: 50%;
+    }
+
+    /* Logo in the right pane pulled back to viewport left */
+    .intro__background__right .intro__background__logo {
+        left: calc(var(--spacing-l) - 50vw);
+    }
+
+    /* Next control at the center seam */
+    .intro__next {
+        left: calc(50vw + var(--spacing-l));
+    }
+
+    .intro__background__content {
+        --intro-radius: 1.35rem;
+        -webkit-clip-path: inset(
+            calc(var(--clip-path-y) - var(--clip-path-h))
+            calc(50% - var(--clip-path-w))
+            calc(100% - var(--clip-path-y) - var(--clip-path-h))
+            calc(50% - var(--clip-path-w))
+            round var(--intro-radius)
+        );
+        clip-path: inset(
+            calc(var(--clip-path-y) - var(--clip-path-h))
+            calc(50% - var(--clip-path-w))
+            calc(100% - var(--clip-path-y) - var(--clip-path-h))
+            calc(50% - var(--clip-path-w))
+            round var(--intro-radius)
+        );
+    }
+
+    /* Peek circle: now on the people (right) for scene 1, video (left) for scene 2 */
+    .intro__background--1 .intro__background__right,
+    .intro__background--2 .intro__background__left {
+        --clip-path-w: min(17vw, 26vh);
+        --clip-path-h: min(17vw, 26vh);
+        --intro-radius: 1.15rem;
+    }
+
+    @media (min-aspect-ratio: 450 / 259) {
+        .intro__background--1 .intro__background__right,
+        .intro__background--2 .intro__background__left {
+            --clip-path-w: min(15vw, 24vh);
+            --clip-path-h: min(15vw, 24vh);
+        }
+    }
+
+    .intro__background--1 .intro__background__left .intro__background__content,
+    .intro__background--2 .intro__background__right .intro__background__content {
+        --intro-radius: 1.65rem;
+    }
+
+    .has-hover .intro__background__right:hover .intro__background__content,
+    .has-hover .intro__background__left:hover .intro__background__content {
+        --intro-radius: 1.85rem;
+    }
+
+    /* People photo (right): shift crop so subjects move UP in the frame */
+    .intro__background__right .intro__background__content img {
+        object-position: center 92% !important;
+    }
+}
+
+
+
+@media only screen and (max-width: 979px) {
+    .intro__middle__deco {
+        --intro-mobile-radius: 1.15rem;
+        width: calc(var(--spacing-s) * 7);
+        height: calc(var(--spacing-s) * 7);
+        border-radius: var(--intro-mobile-radius);
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    .intro__middle__deco .tabs-contents__content {
+        width: 100%;
+        height: 100%;
+        overflow: hidden !important;
+        overflow: clip !important;
+        border-radius: var(--intro-mobile-radius);
+    }
+
+    .intro__middle__deco video,
+    .intro__middle__deco picture,
+    .intro__middle__deco picture img {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        border-radius: var(--intro-mobile-radius) !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+
+    .intro__middle__deco__button {
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        margin: 0;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Solutions — Mode A only (scroll-safe)                                      */
+/* Circle / disc → rounded. Do not move layout__part x/w.                     */
+/* -------------------------------------------------------------------------- */
+#architecture {
+    --sol-radius: 1.25rem;
+}
+
+@media only screen and (min-width: 980px) {
+    .architecture__circle {
+        border-radius: var(--sol-radius);
+        overflow: hidden;
+        overflow: clip;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    /* Side frame — 9:16 portrait, full column width (= large), top-aligned */
+    #architecture .architecture__circle .layout__background--rounded {
+        position: relative !important;
+        inset: auto !important;
+        top: 0 !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 100%;
+        aspect-ratio: 9 / 16;
+        margin: 0 auto;
+        border-radius: var(--sol-radius) !important;
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    .architecture__circle .layout__background--rounded,
+    .architecture__circle .layout__background--rounded img {
+        border-radius: var(--sol-radius) !important;
+    }
+
+    #architecture .architecture__circle .layout__background--rounded img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    /* Center main frame — 16:9 landscape, top-aligned with side image */
+    #architecture
+        .architecture__background-wrapper:not(.layout__part--fullscreen):not(.layout__part--w4) {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #architecture
+        .architecture__background-wrapper:not(.layout__part--fullscreen):not(.layout__part--w4)
+        .architecture__slides {
+        position: relative;
+        top: 0;
+        align-self: flex-start;
+        width: 100% !important;
+        height: auto !important;
+        max-height: 100%;
+        aspect-ratio: 16 / 9;
+        margin: 0 auto;
+        border-radius: var(--sol-radius);
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    #architecture
+        .architecture__background-wrapper:not(.layout__part--fullscreen):not(.layout__part--w4)
+        .architecture__background,
+    #architecture
+        .architecture__background-wrapper:not(.layout__part--fullscreen):not(.layout__part--w4)
+        .architecture__background img {
+        border-radius: var(--sol-radius);
+        overflow: hidden;
+        overflow: clip;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .architecture-quote__image {
+        border-radius: var(--sol-radius) !important;
+    }
+
+    .architecture__background-wrapper.layout__part--fullscreen .architecture__background,
+    .architecture__background-wrapper.layout__part--fullscreen .architecture__background img,
+    .architecture__background-wrapper.layout__part--w4 .architecture__background,
+    .architecture__background-wrapper.layout__part--w4 .architecture__background img {
+        border-radius: 0;
+    }
+}
+
+@media only screen and (max-width: 979px) {
+    #architecture {
+        overflow-x: clip;
+    }
+
+    /* Ever uses margin-left:-55vw on small phones — crops to “…tions” */
+    #architecture .architecture__title.is-hidden--lg-up {
+        position: absolute !important;
+        left: var(--spacing-s) !important;
+        right: var(--spacing-s) !important;
+        bottom: calc(var(--spacing-s) * 2) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: none !important;
+        max-width: calc(100% - var(--spacing-s) * 2) !important;
+        width: auto !important;
+        font-size: clamp(2.6rem, 14vw, 4.5rem) !important;
+        line-height: 0.95 !important;
+        letter-spacing: -0.03em;
+        word-break: normal;
+        overflow: visible;
+        z-index: 2;
+        pointer-events: none; /* title must not steal taps from arrows */
+    }
+
+    /*
+     * Mobile gallery is hidden; the fullscreen photo overlay still sits on
+     * top of the carousel and blocks the prev/next arrows — kill its hits.
+     */
+    #architecture .architecture__image-overlay,
+    #architecture .architecture__background-overlay {
+        pointer-events: none !important;
+    }
+
+    #architecture .architecture__slider-nav {
+        z-index: 30 !important;
+        pointer-events: auto !important;
+    }
+
+    #architecture .architecture__slider-nav .btn,
+    #architecture .architecture__slider-nav a {
+        pointer-events: auto !important;
+        position: relative;
+        z-index: 31;
+    }
+
+    .architecture__circle .layout__background--rounded,
+    .architecture__circle .layout__background--rounded img,
+    .architecture__background,
+    .architecture__background img,
+    .architecture-quote__image {
+        border-radius: var(--sol-radius) !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Process — Mode A only (scroll-safe)                                        */
+/* Comfort disc → rounded. Do not move layout__part x/w.                      */
+/* -------------------------------------------------------------------------- */
+#interior {
+    --proc-radius: 1.25rem;
+}
+
+@media only screen and (min-width: 980px) {
+    .interior-comfort__image {
+        border-radius: var(--proc-radius) !important;
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    .interior-comfort__image picture,
+    .interior-comfort__image img {
+        border-radius: var(--proc-radius);
+    }
+
+    /* Soft corners on stills — keep on wrapper so overlays stay intact */
+    .interior__image {
+        border-radius: calc(var(--proc-radius) * 0.85);
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    .interior__image picture,
+    .interior__image img {
+        border-radius: 0;
+    }
+
+    /*
+     * Title: white hero (--large) stays Ever scale.
+     * Black content title (after --large removed) stays under the thin line.
+     */
+    #interior .interior__title:not(.interior__title--large) {
+        font-size: min(9rem, calc(var(--col) * 1.05)) !important;
+        line-height: 0.9 !important;
+        letter-spacing: -0.04em;
+        max-width: 100%;
+        margin-left: 0 !important;
+    }
+
+    /*
+     * 3 images: mirrored cascade (top card on the right),
+     * shifted so the stack sits at the layout's right corner
+     * (container is x2 w2 — nudge +1 cell / 100% to the right).
+     */
+    #interior .interior__image--1:not(.interior__image--full) {
+        left: auto !important;
+        right: calc(-100% - var(--spacing-s) * 2) !important;
+        top: 0 !important;
+        bottom: auto !important;
+        transform: none !important;
+    }
+
+    #interior .interior__image--2:not(.interior__image--full) {
+        left: auto !important;
+        right: calc(-50% - var(--spacing-s)) !important;
+        top: 50% !important;
+        bottom: auto !important;
+        transform: translateY(-50%) !important;
+    }
+
+    #interior .interior__image--3:not(.interior__image--full) {
+        left: auto !important;
+        right: 0 !important;
+        top: auto !important;
+        bottom: 0 !important;
+        transform: none !important;
+    }
+
+    /* Enquiry copy centered under the comfort photo; logo removed */
+    #interior .interior-comfort__logo {
+        display: none !important;
+    }
+
+    /* Leave a clear band under the photo so caption never overlaps */
+    #interior .interior-comfort__image {
+        bottom: calc(var(--spacing-l) * 1.5 + 5.5rem) !important;
+    }
+
+    #interior .interior-comfort__title {
+        position: absolute !important;
+        left: 50% !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: calc(var(--spacing-l) * 0.75) !important;
+        transform: translateX(-50%);
+        z-index: 2;
+        margin: 0;
+        /* Wider so it doesn't wrap to 4 lines */
+        width: calc(100% - var(--spacing-l) * 2) !important;
+        max-width: calc(100% - var(--spacing-l) * 2) !important;
+        padding: 0 var(--spacing-s);
+        box-sizing: border-box;
+        text-align: center;
+        /* h5 −19% (was −10%, then −10% again) */
+        font-size: 2.187rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Force fewer line breaks on desktop spans */
+    #interior .interior-comfort__title .is-hidden--md-down br {
+        display: none;
+    }
+
+    /* Gallery copy: only the active phase panel */
+    #interior .architecture__gallery__content .tabs-contents__content[aria-hidden="true"] {
+        display: none !important;
+    }
+}
+
+@media only screen and (min-width: 980px) and (max-width: 1439px) {
+    #interior .interior-comfort__title {
+        font-size: calc((1.8375rem + 8.625 * ((100vw - 980px) / 460)) * 0.81) !important;
+    }
+
+    #interior .interior-comfort__image {
+        bottom: calc(var(--spacing-l) * 1.5 + 5rem) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #interior .interior-comfort__title {
+        font-size: 3.24rem !important; /* 4rem × 0.81 */
+        line-height: 1.15 !important;
+    }
+
+    #interior .interior-comfort__image {
+        bottom: calc(var(--spacing-l) * 1.5 + 5.75rem) !important;
+    }
+}
+
+@media only screen and (max-width: 979px) {
+    #interior {
+        overflow-x: clip;
+    }
+
+    #interior .interior__title-mobile {
+        transform: none !important;
+        left: var(--spacing-s) !important;
+        max-width: calc(100% - var(--spacing-s) * 2);
+        font-size: clamp(2.4rem, 12vw, 4.5rem) !important;
+        pointer-events: none;
+    }
+
+    /* Same overlay-blocks-arrows issue as Solutions mobile */
+    #interior .interior__image__overlay {
+        pointer-events: auto;
+    }
+
+    #interior .carousel-owl__nav,
+    #interior .js-carousel-owl-nav {
+        position: relative;
+        z-index: 30;
+        pointer-events: auto !important;
+    }
+
+    #interior .carousel-owl__nav .btn,
+    #interior .js-carousel-owl-nav .btn {
+        pointer-events: auto !important;
+    }
+
+    .interior-comfort__image,
+    .interior-comfort__image picture,
+    .interior-comfort__image img {
+        border-radius: var(--proc-radius) !important;
+    }
+
+    .interior__image {
+        border-radius: calc(var(--proc-radius) * 0.85) !important;
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    #interior .interior-comfort__logo {
+        display: none !important;
+    }
+
+    #interior .interior-comfort__title {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        margin-top: var(--spacing-s);
+        padding: 0 var(--spacing-s) var(--spacing-s);
+        text-align: center;
+        font-size: 1.62rem !important; /* 2rem × 0.81 */
+        line-height: 1.25 !important;
+    }
+
+    /* Gallery copy: only the active phase panel */
+    #interior .architecture__gallery__content .tabs-contents__content[aria-hidden="true"] {
+        display: none !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Compare — Mode A only (scroll-safe)                                        */
+/* Keep Ever default title scale; only cap the extreme 16rem spike.           */
+/* -------------------------------------------------------------------------- */
+#apartments {
+    --cmp-radius: 1.25rem;
+}
+
+@media only screen and (min-width: 980px) {
+    /*
+     * Middle ground: bigger than the clipped/tiny pass, smaller than
+     * calc(col * 2) and the Ever 16rem spike. No overflow clipping.
+     */
+    #apartments .apartments__title {
+        font-size: min(12rem, calc(var(--col) * 1.4)) !important;
+        line-height: 0.9 !important;
+        letter-spacing: -0.04em;
+        overflow: visible;
+    }
+
+    #apartments [data-custom-scroll-id="apartments-text"] {
+        position: relative;
+        z-index: 1;
+        max-width: 100%;
+        padding-right: 0.5rem;
+    }
+
+    #apartments .layout__part--x0.layout__part--w2 {
+        overflow: visible;
+        z-index: 3;
+    }
+
+    #apartments .layout__part--x2.layout__part--w4 {
+        z-index: 1;
+    }
+
+    .apartments__more {
+        border-radius: var(--cmp-radius) !important;
+        overflow: hidden;
+        overflow: clip;
+    }
+
+    .apartments__more picture,
+    .apartments__more img {
+        border-radius: var(--cmp-radius);
+    }
+}
+
+/* Extra-large Ever spike (was 16rem) — keep below the general cap */
+@media only screen and (min-width: 1920px) and (min-height: 750px) and (max-height: 1050px) {
+    #apartments .apartments__title {
+        font-size: min(12rem, calc(var(--col) * 1.35)) !important;
+    }
+}
+
+@media only screen and (max-width: 979px) {
+    #apartments {
+        overflow-x: clip;
+    }
+
+    #apartments .apartments__title,
+    #apartments .apartments__title-mobile {
+        transform: none !important;
+        overflow: visible;
+    }
+
+    .apartments__more,
+    .apartments__more picture,
+    .apartments__more img {
+        border-radius: var(--cmp-radius) !important;
+    }
+}
+
+/*
+ * Gray + on first O of SOLUTIONS
+ * - Button keeps original btn--lg / btn--square size (no shrink)
+ * - Grid stacks letter + button; letter alone sizes the cell;
+ *   button centers on that cell (true middle of the O box)
+ */
+#architecture .architecture__title-o {
+    display: inline-grid;
+    grid-template: 1fr / 1fr;
+    place-items: center;
+    line-height: 1;
+    vertical-align: baseline;
+}
+
+#architecture .architecture__title-o__letter {
+    grid-area: 1 / 1;
+}
+
+#architecture .architecture__title-o > .architecture__modal-button {
+    grid-area: 1 / 1;
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    /* 0×0 so the O letter alone defines the grid size; button overflows centered */
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    z-index: 60;
+    line-height: 0;
+    pointer-events: none;
+    transform: none !important;
+    translate: none;
+}
+
+#architecture .architecture__title-o > .architecture__modal-button .btn {
+    /* Original gray circle size — do not shrink */
+    pointer-events: auto !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 61;
+    /* Optical nudge into the O counter */
+    top: -0.1em;
+    left: 0.2em;
+}
+
+@media only screen and (min-width: 980px) {
+    #architecture .architecture__circle {
+        padding-left: calc(var(--spacing-l) * 0.25);
+        padding-right: calc(var(--spacing-l) * 0.25);
+    }
+
+    /* Title + button above left copy cell so + stays clickable */
+    #architecture [data-custom-scroll-id="architecture-title-wrapper"] {
+        z-index: 40;
+    }
+
+    #architecture [data-custom-scroll-id="architecture-sub-title-wrapper"],
+    #architecture [data-custom-scroll-id="architecture-text-wrapper"] {
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    #architecture [data-custom-scroll-id="architecture-text-wrapper"] a {
+        pointer-events: auto;
+    }
+}
+
+/* Body under THREE PATHS — same type as hero intro__text (text--lead) */
+#architecture [data-custom-scroll-id="architecture-sub-title-wrapper"] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+#architecture [data-custom-scroll-id="architecture-text"] {
+    margin: calc(0.65rem + 20px) 0 0;
+    padding-left: 0;
+    padding-right: calc(var(--spacing-s) * 1.75);
+    max-width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    /* 30% smaller than hero text--lead (~2rem) */
+    font-size: calc(2rem * 0.7) !important;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+}
+
+@media only screen and (min-width: 980px) {
+    #architecture [data-custom-scroll-id="architecture-text"] {
+        margin-top: calc(0.75rem + 20px);
+        padding-right: calc(var(--spacing-l) * 1.5);
+        font-size: calc((1.36111rem + 6.38889 * ((100vw - 980px) / 460)) * 0.7) !important;
+    }
+
+    #architecture [data-custom-scroll-id="architecture-text-wrapper"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-top: 0.5rem;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #architecture [data-custom-scroll-id="architecture-text"] {
+        font-size: calc(2.8rem * 0.7) !important;
+    }
+}
+
+:root {
+    --kb-img-radius: 1.25rem;
+}
+
+.layout__background--rounded,
+.layout__background--rounded img,
+.layout__background--contact,
+.layout__background--contact img,
+.architecture__circle,
+.architecture__circle .layout__background--rounded,
+.architecture__circle .layout__background--rounded img,
+.architecture-quote__image,
+.architecture-quote__image img,
+.architecture-quote__image picture,
+.interior-comfort__image,
+.interior-comfort__image img,
+.interior-comfort__image picture,
+.apartments__more,
+.apartments__more img,
+.apartments__more picture,
+.intro__middle__deco,
+.intro__middle__deco video,
+.intro__middle__deco picture,
+.intro__middle__deco picture img,
+.image-comparison,
+.image-comparison__content,
+.details-modal__image img,
+.details-modal__image picture {
+    border-radius: var(--kb-img-radius) !important;
+}
+
+.architecture__circle,
+.architecture-quote__image,
+.interior-comfort__image,
+.apartments__more,
+.image-comparison,
+.image-comparison__content,
+.intro__middle__deco {
+    overflow: hidden;
+    overflow: clip;
+}
+
+#architecture .architecture-quote__image {
+    overflow: visible !important;
+}
+
+/* Keep full-bleed theatre backgrounds sharp-edged when expanded */
+.architecture__background-wrapper.layout__part--fullscreen .architecture__background,
+.architecture__background-wrapper.layout__part--fullscreen .architecture__background img,
+.architecture__background-wrapper.layout__part--w4 .architecture__background,
+.architecture__background-wrapper.layout__part--w4 .architecture__background img {
+    border-radius: 0 !important;
+}
+
+/* Quote: text under the image, black */
+#architecture .architecture-quote__text {
+    color: #000 !important;
+}
+
+/*
+ * Quote panel is h2-large (taller than layout-height). Ever's default
+ * hidden-bottom offset can leave the top of the photo peeking under
+ * SOLUTIONS — push it fully off-screen by its own height.
+ */
+@media only screen and (min-width: 980px) {
+    #architecture [data-custom-scroll-id="architecture-quote"].layout__part--hidden-bottom {
+        transform: translateY(calc(100% + var(--spacing-l) * 2)) !important;
+        pointer-events: none;
+    }
+
+    #architecture.section--no-overflow,
+    #architecture.section--no-overflow > .section__content {
+        overflow: hidden !important;
+    }
+}
+
+@media only screen and (min-width: 980px) {
+    #architecture .architecture-quote__image {
+        top: calc(var(--spacing-l) * 0.75) !important;
+        bottom: calc(var(--spacing-l) * 3.25) !important;
+        width: min(42vw, 520px) !important;
+        max-width: 90% !important;
+        overflow: visible !important;
+    }
+
+    #architecture .architecture-quote__image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: var(--sol-radius, 1.25rem);
+    }
+
+    #architecture .architecture-quote__image picture {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--sol-radius, 1.25rem);
+        overflow: hidden;
+    }
+
+    #architecture .architecture-quote__text {
+        position: absolute !important;
+        left: calc(var(--spacing-l) * 1.5) !important;
+        right: calc(var(--spacing-l) * 1.5) !important;
+        top: auto !important;
+        bottom: calc(var(--spacing-l) * 1.1) !important;
+        margin: 0 !important;
+        transform: none !important;
+        text-align: center;
+        color: #000 !important;
+    }
+}
+
+/* Author badge — bottom-right on the photo, blue marker */
+#architecture .architecture-quote__author {
+    position: absolute !important;
+    left: auto !important;
+    right: 0.75rem !important;
+    bottom: 0.75rem !important;
+    z-index: 3;
+    margin: 0 !important;
+    padding: 0.55rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background: #1a4a5c;
+    color: #fff !important;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    text-align: left;
+    max-width: calc(100% - 1.5rem);
+}
+
+#architecture .architecture-quote__author-name {
+    display: block;
+    font-weight: 500;
+    color: #fff !important;
+    font-size: 0.95em;
+    line-height: 1.2;
+}
+
+#architecture .architecture-quote__author-role {
+    display: block;
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 0.8em;
+    line-height: 1.25;
+}
+
+@media only screen and (max-width: 979px) {
+    #architecture .architecture-quote__image {
+        position: relative;
+        overflow: visible !important;
+    }
+
+    #architecture .architecture-quote__author {
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+    }
+}
+
+@media only screen and (max-width: 979px) {
+    #architecture .architecture-quote__text {
+        position: relative !important;
+        margin-top: calc(var(--spacing-s) * 1.25) !important;
+        transform: none !important;
+        color: #000 !important;
+    }
+}
+
+/* Solutions gallery: counter + arrows on top, description text at bottom */
+@media only screen and (min-width: 980px) {
+    /*
+     * Content must stay full-height — counter is position:absolute;top
+     * inside it. Collapsing to bottom-only hid the giant step number.
+     */
+    #architecture .architecture__gallery__content {
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 100%;
+        overflow: visible;
+    }
+
+    #architecture .architecture__gallery__counter {
+        position: absolute !important;
+        top: calc(var(--header-height, 4.5rem) + var(--spacing-s)) !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateX(-50%);
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        text-align: center;
+        z-index: 1;
+        line-height: 0.85;
+        pointer-events: none;
+        width: max-content;
+        max-width: 100%;
+        anchor-name: --kb-gal-num;
+    }
+    #architecture .architecture__gallery__nav {
+        top: calc(var(--header-height, 4.5rem) + var(--spacing-l) * 1.25) !important;
+        bottom: auto !important;
+        z-index: 50;
+        pointer-events: auto !important;
+        transform: none;
+    }
+
+    @supports (top: anchor(--kb-gal-num bottom)) {
+        #architecture .architecture__gallery__nav {
+            top: anchor(--kb-gal-num bottom) !important;
+            transform: translateY(-50%);
+            pointer-events: auto !important;
+            z-index: 50;
+        }
+    }
+
+    #architecture .architecture__gallery__content .tabs-contents,
+    #architecture .architecture__gallery__content .tabs-contents--bottom {
+        position: static !important;
+    }
+
+    #architecture .architecture__gallery__content .tabs-contents__content {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100% !important;
+    }
+}
+
+/* Process gallery: counter + arrows on top, phase description at bottom */
+@media only screen and (min-width: 980px) {
+    /*
+     * Gallery image slot is x0 w4 (left). Cascade thumbs still live in
+     * x2 — when they expand (--full), shift left by one x2 offset so they
+     * land on the left slot instead of stacking a second copy on the right.
+     */
+    #interior .interior__image--full {
+        left: calc(
+            -1 * ((100vw - var(--spacing-l) * 2 - var(--spacing-s) * 10) / 6 * 2 + 2 * var(--spacing-s) * 2)
+        ) !important;
+        right: auto !important;
+        width: var(--layout-width-4) !important;
+        transform: none !important;
+    }
+
+    /* Right rail: solid panel so copy/counter aren't over the photo */
+    #interior [data-custom-scroll-id="interior-gallery-description"] {
+        z-index: 3;
+        background: var(--t-background, #e8e8e8);
+    }
+
+    #interior .architecture__gallery__content {
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 100%;
+        overflow: visible;
+    }
+
+    #interior .architecture__gallery__counter {
+        position: absolute !important;
+        top: calc(var(--spacing-l) * 1.15) !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateX(-50%);
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        text-align: center;
+        z-index: 1;
+        line-height: 0.85;
+        pointer-events: none;
+        width: max-content;
+        max-width: 100%;
+        anchor-name: --kb-int-gal-num;
+    }
+
+    #interior .architecture__gallery__nav {
+        top: calc(var(--spacing-l) * 1.15 + clamp(6rem, 14vw, 18rem)) !important;
+        bottom: auto !important;
+        z-index: 2;
+        transform: translateY(-50%);
+    }
+
+    @supports (top: anchor(--kb-int-gal-num bottom)) {
+        #interior .architecture__gallery__nav {
+            top: anchor(--kb-int-gal-num bottom) !important;
+            transform: translateY(-50%);
+        }
+    }
+
+    #interior .architecture__gallery__content .tabs-contents,
+    #interior .architecture__gallery__content .tabs-contents--bottom {
+        position: static !important;
+    }
+
+    #interior .architecture__gallery__content .tabs-contents__content {
+        position: absolute !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100% !important;
+    }
+}
+
+/* Modal: title smaller + centered above the photo, position tuned */
+#architecture-info #architecture-info-title {
+    white-space: nowrap;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: calc(2.7rem * 0.682) !important;
+    padding-right: 0;
+    max-width: calc(100% - 4rem);
+    box-sizing: border-box;
+    position: relative;
+    left: -9%;
+}
+
+@media only screen and (min-width: 980px) {
+    #architecture-info #architecture-info-title {
+        font-size: calc(4rem * 0.638) !important;
+        max-width: min(100%, 36rem);
+        left: -9%;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #architecture-info #architecture-info-title {
+        font-size: calc(5.4rem * 0.605) !important;
+        max-width: min(100%, 40rem);
+    }
+}
+
+#architecture-info .details-modal__image > p.architecture-info__lede,
+#architecture-info .architecture-info__lede {
+    color: #000 !important;
+    text-align: center;
+    margin-top: calc(var(--spacing-s) * 1.25) !important;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 42rem;
+    /* 20% smaller than .h5 */
+    font-size: calc(2rem * 0.8) !important;
+    line-height: 1.4;
+}
+
+@media only screen and (min-width: 980px) {
+    #architecture-info .architecture-info__lede {
+        font-size: calc((1.8375rem + 8.625 * ((100vw - 980px) / 460)) * 0.8) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #architecture-info .architecture-info__lede {
+        font-size: calc(4rem * 0.8) !important;
+    }
+}
+
+/* Process modal (#interior-info): lede under photo, no overlap, −12% vs h5 */
+#interior-info .details-modal__image > p.interior-info__lede,
+#interior-info .interior-info__lede {
+    text-align: center;
+    margin-top: calc(var(--spacing-s) * 1.25) !important;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 42rem;
+    /* was −20%; +10% from that = 0.88 of .h5 */
+    font-size: calc(2rem * 0.88) !important;
+    line-height: 1.4;
+}
+
+@media only screen and (min-width: 980px) {
+    #interior-info .interior-info__lede {
+        font-size: calc((1.8375rem + 8.625 * ((100vw - 980px) / 460)) * 0.88) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #interior-info .interior-info__lede {
+        font-size: calc(4rem * 0.88) !important;
+    }
+}
+
+/* Why Us modal (#territory-info): lede under photo, black, ~full size */
+#territory-info .details-modal__image > p.territory-info__lede,
+#territory-info .territory-info__lede {
+    color: #000 !important;
+    text-align: center;
+    margin-top: calc(var(--spacing-s) * 1.25) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    /* Wider so it wraps to ~2 lines, not 4 */
+    max-width: min(92%, 52rem) !important;
+    width: 100%;
+    padding: 0 var(--spacing-s);
+    box-sizing: border-box;
+    font-size: calc(2rem * 0.99) !important;
+    line-height: 1.35;
+}
+
+@media only screen and (min-width: 980px) {
+    #territory-info .territory-info__lede {
+        font-size: calc((1.8375rem + 8.625 * ((100vw - 980px) / 460)) * 0.99) !important;
+        max-width: min(96%, 56rem) !important;
+    }
+
+    /* Override Ever narrow-modal p constraint */
+    #territory-info .details-modal__image--narrow p.territory-info__lede {
+        max-width: min(96%, 56rem) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #territory-info .territory-info__lede {
+        font-size: calc(4rem * 0.99) !important;
+        max-width: min(96%, 60rem) !important;
+    }
+}
+
+/* Why Us slider: Honest / Insiders / Trusted / Proven titles + body → black */
+#territory .territory-slider-title,
+#territory .territory-slider-text {
+    color: #000 !important;
+}
+
+/* Surroundings modal (#location-info): lede under photo, no overlap */
+#location-info .details-modal__image > p.location-info__lede,
+#location-info .location-info__lede {
+    text-align: center;
+    margin-top: calc(var(--spacing-s) * 1.75) !important;
+    margin-bottom: calc(var(--spacing-s) * 0.5) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    /* Wider so it wraps to ~2 lines, not 3 */
+    max-width: min(100%, 64rem) !important;
+    width: 100%;
+    padding-top: calc(var(--spacing-s) * 0.5);
+    padding-bottom: calc(var(--spacing-s) * 0.75);
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
+    line-height: 1.3;
+}
+
+@media only screen and (min-width: 980px) {
+    #location-info .details-modal__image--narrow p.location-info__lede {
+        max-width: min(100%, 68rem) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        margin-top: calc(var(--spacing-s) * 2) !important;
+        padding-top: calc(var(--spacing-s) * 0.65);
+        padding-bottom: var(--spacing-s);
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #location-info .location-info__lede {
+        max-width: min(100%, 72rem) !important;
+    }
+}
+
+/* Second location-info caption: −10%, ~2 lines, more padding */
+#location-info .location-info__lede--wide {
+    text-align: center;
+    margin-top: calc(var(--spacing-s) * 2) !important;
+    margin-bottom: calc(var(--spacing-s) * 1.25) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: min(100%, 68rem) !important;
+    width: 100%;
+    padding: calc(var(--spacing-s) * 0.85) calc(var(--spacing-s) * 0.5);
+    box-sizing: border-box;
+    line-height: 1.3;
+    font-size: calc(2rem * 0.9) !important;
+}
+
+@media only screen and (min-width: 980px) {
+    #location-info .location-info__lede--wide {
+        font-size: calc((1.8375rem + 8.625 * ((100vw - 980px) / 460)) * 0.9) !important;
+        max-width: min(100%, 72rem) !important;
+        padding: var(--spacing-s) var(--spacing-s);
+        margin-top: calc(var(--spacing-s) * 2.25) !important;
+        margin-bottom: calc(var(--spacing-s) * 1.5) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #location-info .location-info__lede--wide {
+        font-size: calc(4rem * 0.9) !important;
+        max-width: min(100%, 76rem) !important;
+        padding: calc(var(--spacing-s) * 1.15) var(--spacing-l);
+    }
+}

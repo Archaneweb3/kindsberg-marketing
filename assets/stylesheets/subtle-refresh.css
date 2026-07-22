@@ -39,30 +39,41 @@
 
     /*
      * KINDSBERG wordmark: shared scale for hero + preloader handoff.
+     * +20% larger than prior scales; +5% lower via --kb-wordmark-shift-y.
      * Shrink with transform only (do NOT change width/left — that broke
      * the split and made the hero look truncated).
      */
     .intro__background,
     .preloader--intro {
-        --kb-wordmark-scale: 0.86;
+        --kb-wordmark-scale: 1.032;
+        --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+        --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
     }
 
     @media (max-height: 900px) {
         .intro__background,
         .preloader--intro {
-            --kb-wordmark-scale: 0.72;
+            --kb-wordmark-scale: 0.864;
         }
     }
 
     @media (max-height: 780px) {
         .intro__background,
         .preloader--intro {
-            --kb-wordmark-scale: 0.64;
+            --kb-wordmark-scale: 0.768;
         }
     }
 
-    .intro__background__logo,
+    .intro__background__logo {
+        top: var(--kb-wordmark-top);
+        transform: scale(var(--kb-wordmark-scale));
+        transform-origin: center top;
+    }
+
     .intro__background__line {
+        top: calc(
+            var(--kb-wordmark-top) + var(--spacing-s) + (100vw - var(--spacing-l) * 2) * 0.28369
+        );
         transform: scale(var(--kb-wordmark-scale));
         transform-origin: center top;
     }
@@ -152,18 +163,20 @@
 /* KINDSBERG wordmark on intro preloader — same size/position as hero */
 @media only screen and (min-width: 980px) {
     .preloader--intro {
-        --kb-wordmark-scale: 0.86;
+        --kb-wordmark-scale: 1.032;
+        --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+        --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
     }
 
     @media (max-height: 900px) {
         .preloader--intro {
-            --kb-wordmark-scale: 0.72;
+            --kb-wordmark-scale: 0.864;
         }
     }
 
     @media (max-height: 780px) {
         .preloader--intro {
-            --kb-wordmark-scale: 0.64;
+            --kb-wordmark-scale: 0.768;
         }
     }
 
@@ -171,7 +184,7 @@
         left: var(--spacing-l);
         right: auto;
         width: calc(100vw - var(--spacing-l) * 2);
-        top: calc(var(--header-height) + var(--spacing-s));
+        top: var(--kb-wordmark-top);
         bottom: auto;
         transform: scale(var(--kb-wordmark-scale));
         transform-origin: center top;

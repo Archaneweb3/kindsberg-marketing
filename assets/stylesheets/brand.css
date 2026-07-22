@@ -507,20 +507,11 @@ body {
 /*
  * Solutions title (#architecture): lock the LARGE size.
  *
- * landing.js scroll timeline does:
- *   { id: "architecture-title",
- *     removeClass: "architecture__title--large",
- *     properties: ["font-size", "letter-spacing"], ... }
- * so as you scroll inside the section the title shrinks from
- * --large (≈0.152–0.162 * --layout-width) down to the bare
- * .architecture__title rem size. Different scroll progress =
- * different size — which is why localhost and Vercel screenshots
- * of the same section disagreed even with identical files.
- *
- * Same fix pattern as .location__title above: one font-size for
- * both states so the tween's font-size leg is a no-op. !important
- * beats the inline styles the timeline writes while tweening.
- * Letter-spacing still free to animate.
+ * landing.js scroll timeline removes .architecture__title--large and
+ * tweens font-size/letter-spacing, so different scroll progress looked
+ * like a localhost-vs-Vercel mismatch. Same font-size in both states
+ * makes that tween a no-op (same pattern as .location__title above).
+ * No JS — fighting removeClass with MutationObserver froze navigation.
  */
 #architecture .architecture__title,
 #architecture .architecture__title--large {

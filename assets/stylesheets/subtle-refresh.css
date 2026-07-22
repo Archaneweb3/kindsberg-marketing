@@ -133,28 +133,28 @@
     }
 
     /*
-     * People photo: faces clear of wordmark, then nudged UP 20%.
+     * People photo: nudged UP (+20% then +15% more).
      * Higher object-position % = subjects move up in the frame.
      */
     .intro__background__right .intro__background__content img {
-        object-position: center 56% !important;
+        object-position: center 71% !important;
     }
 
     @media (max-height: 920px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 48% !important;
+            object-position: center 63% !important;
         }
     }
 
     @media (max-height: 800px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 44% !important;
+            object-position: center 59% !important;
         }
     }
 
     @media (min-height: 1000px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 68% !important;
+            object-position: center 83% !important;
         }
     }
 }

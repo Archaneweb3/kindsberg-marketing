@@ -38,23 +38,37 @@
     }
 
     /*
-     * KINDSBERG wordmark: full size (restored),
-     * shifted down 10% of usable viewport (was 20%, raised 10%).
-     * Keep left/right halves aligned across the split.
+     * KINDSBERG wordmark after intro — MacBook-safe.
+     * Cap height by vh so the wordmark never covers subject faces on short
+     * laptop viewports (same code local + Vercel; difference was screen geometry).
+     * Preloader stays full size separately.
      */
     .intro__background {
-        --kb-wordmark-scale: 1;
+        --kb-wordmark-natural-h: calc((100vw - var(--spacing-l) * 2) * 0.28369);
+        --kb-wordmark-scale: min(0.72, calc(12.5vh / var(--kb-wordmark-natural-h)));
         --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
         --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
-        --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+        --kb-wordmark-shift-y: 0px;
         --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
-        --kb-wordmark-height: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale) * 0.28369);
+        --kb-wordmark-height: calc(var(--kb-wordmark-natural-h) * var(--kb-wordmark-scale));
+    }
+
+    /* Left (video) open: slightly larger is OK over dark field */
+    .intro__background--1 {
+        --kb-wordmark-scale: min(0.86, calc(15vh / var(--kb-wordmark-natural-h)));
     }
 
     .intro__background__logo {
         width: var(--kb-wordmark-width);
         left: var(--kb-wordmark-inset);
         top: var(--kb-wordmark-top);
+        overflow: visible;
+        max-height: 12.5vh;
+        height: auto;
+    }
+
+    .intro__background--1 .intro__background__logo {
+        max-height: 15vh;
     }
 
     .intro__background__right .intro__background__logo {
@@ -64,7 +78,11 @@
     .intro__background__line {
         width: var(--kb-wordmark-width);
         left: var(--kb-wordmark-inset);
-        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + var(--kb-wordmark-height));
+        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + min(var(--kb-wordmark-height), 12.5vh));
+    }
+
+    .intro__background--1 .intro__background__line {
+        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + min(var(--kb-wordmark-height), 15vh));
     }
 
     .intro__background__right .intro__background__line {
@@ -122,42 +140,39 @@
     }
 
     /*
-     * People photo (right): keep faces below the KINDSBERG logo.
-     * 92% pushed subjects too high on short laptop viewports (MacBook).
-     * Tune by viewport height — not by deploy target (local === Vercel).
+     * People photo: keep faces BELOW the wordmark band on all desktop sizes.
+     * Lower object-position % = heads sit lower in the frame (clear of logo).
+     * MacBook short viewports need the most aggressive crop.
      */
     .intro__background__right .intro__background__content img {
-        object-position: center 58% !important;
+        object-position: center 36% !important;
     }
 
-    /* Short / laptop viewports: faces mid-lower, clear of logo band */
     @media (max-height: 920px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 44% !important;
+            object-position: center 28% !important;
         }
     }
 
-    /* Very short usable height (browser chrome + dock) */
     @media (max-height: 800px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 38% !important;
+            object-position: center 24% !important;
         }
     }
 
-    /* Tall monitors: mild upward bias for composition */
     @media (min-height: 1000px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 70% !important;
+            object-position: center 48% !important;
         }
     }
 }
 
-/* KINDSBERG wordmark on intro preloader: full size, +10% lower (match hero) */
+/* KINDSBERG wordmark on intro preloader: full size (shrinks after intro on hero) */
 .preloader--intro {
     --kb-wordmark-scale: 1;
     --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
     --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
-    --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+    --kb-wordmark-shift-y: 0px;
     --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
 }
 
@@ -167,14 +182,45 @@
     right: auto;
     top: var(--kb-wordmark-top);
     transform: none;
+    overflow: visible;
 }
 
 @media only screen and (max-width: 979px) {
+    /* Mobile: keep G visible — old 144 viewBox clipped the last letter */
+    .preloader--intro .preloader__content {
+        overflow: visible;
+    }
+
     .preloader--intro .preloader__content svg {
-        width: calc(100% - var(--spacing-l) * 2);
+        width: calc(100% - var(--spacing-l) * 2 - 4px);
+        max-width: calc(100vw - var(--spacing-l) * 2 - 4px);
         left: var(--spacing-l);
         right: auto;
         top: auto;
+        overflow: visible;
+        /* Extra right room so Safari doesn't clip the G glyph */
+        padding-right: 2.5%;
+        box-sizing: border-box;
+    }
+
+    .preloader--intro .preloader__content svg text {
+        letter-spacing: 1.2px;
+    }
+
+    .intro__top__logo,
+    .intro__top__logo .icon,
+    .header__logo .icon-logo {
+        overflow: visible !important;
+    }
+
+    .intro__top__logo .icon {
+        width: 96%;
+        max-width: 100%;
+    }
+
+    .header__logo .icon-logo {
+        width: auto;
+        max-width: 100%;
     }
 }
 

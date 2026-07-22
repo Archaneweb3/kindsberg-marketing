@@ -48,6 +48,70 @@
     font-size: min(calc(var(--layout-height) * 0.132), calc(var(--layout-width) * 0.182));
 }
 
+/*
+ * Section titles (Solutions / Process / Why Us): keep --large size for the
+ * whole scroll scene.
+ *
+ * Ever's timeline removes *__title--large and tweens font-size, so the same
+ * HTML looks "big" at scene start and "small" mid-scroll. Screenshots of
+ * localhost vs Vercel then look mismatched even when files are identical.
+ *
+ * CSS-only lock (same idea as .location__title above). !important beats the
+ * inline font-size the timeline writes while tweening.
+ *
+ * DO NOT use JS to re-add --large or clear styles via MutationObserver —
+ * that fights the scroll controller and freezes navigation.
+ */
+#architecture .architecture__title,
+#architecture .architecture__title--large {
+    font-size: calc(var(--layout-width) * 0.152) !important;
+}
+
+@media only screen and (min-width: 1440px) and (min-height: 750px) {
+    #architecture .architecture__title,
+    #architecture .architecture__title--large {
+        font-size: calc(var(--layout-width) * 0.162) !important;
+    }
+}
+
+#interior .interior__title,
+#interior .interior__title--large {
+    font-size: calc(var(--layout-width) * 0.2179) !important;
+}
+
+@media only screen and (min-width: 1440px) and (min-height: 750px) {
+    #interior .interior__title,
+    #interior .interior__title--large {
+        font-size: calc(var(--layout-width) * 0.2279) !important;
+    }
+}
+
+#territory .territory__title,
+#territory .territory__title--large {
+    font-size: calc(var(--layout-width) * 0.167) !important;
+}
+
+@media (min-width: 1200px) and (min-height: 600px) and (max-height: 760px) {
+    #territory .territory__title,
+    #territory .territory__title--large {
+        font-size: calc(var(--layout-width) * 0.1725) !important;
+    }
+}
+
+@media only screen and (min-width: 1440px) and (min-height: 750px) {
+    #territory .territory__title,
+    #territory .territory__title--large {
+        font-size: calc(var(--layout-width) * 0.1785) !important;
+    }
+}
+
+@media (min-width: 1440px) and (min-height: 750px) and (max-height: 920px) {
+    #territory .territory__title,
+    #territory .territory__title--large {
+        font-size: calc(var(--layout-width) * 0.1725) !important;
+    }
+}
+
 /* Contact-modal title runs under the form panel.
  *
  * Same failure as the rotated title above, for the same reason: .h2 sizes off

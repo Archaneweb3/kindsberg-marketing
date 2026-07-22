@@ -38,56 +38,36 @@
     }
 
     /*
-     * KINDSBERG wordmark after intro — MacBook-safe.
-     * Cap height by vh so the wordmark never covers subject faces on short
-     * laptop viewports (same code local + Vercel; difference was screen geometry).
-     * Preloader stays full size separately.
+     * KINDSBERG wordmark: keep Ever full-span left/right alignment.
+     * Shrink with transform only (do NOT change width/left — that broke
+     * the split and made the hero look truncated).
      */
-    .intro__background {
-        --kb-wordmark-natural-h: calc((100vw - var(--spacing-l) * 2) * 0.28369);
-        --kb-wordmark-scale: min(0.72, calc(12.5vh / var(--kb-wordmark-natural-h)));
-        --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
-        --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
-        --kb-wordmark-shift-y: 0px;
-        --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
-        --kb-wordmark-height: calc(var(--kb-wordmark-natural-h) * var(--kb-wordmark-scale));
-    }
-
-    /* Left (video) open: slightly larger is OK over dark field */
-    .intro__background--1 {
-        --kb-wordmark-scale: min(0.86, calc(15vh / var(--kb-wordmark-natural-h)));
-    }
-
-    .intro__background__logo {
-        width: var(--kb-wordmark-width);
-        left: var(--kb-wordmark-inset);
-        top: var(--kb-wordmark-top);
-        overflow: visible;
-        max-height: 12.5vh;
-        height: auto;
-    }
-
-    .intro__background--1 .intro__background__logo {
-        max-height: 15vh;
-    }
-
-    .intro__background__right .intro__background__logo {
-        left: calc(var(--kb-wordmark-inset) - 50vw);
-    }
-
+    .intro__background__logo,
     .intro__background__line {
-        width: var(--kb-wordmark-width);
-        left: var(--kb-wordmark-inset);
-        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + min(var(--kb-wordmark-height), 12.5vh));
+        transform: scale(0.86);
+        transform-origin: center top;
     }
 
-    .intro__background--1 .intro__background__line {
-        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + min(var(--kb-wordmark-height), 15vh));
+    /* Right pane logo offset — original Ever math (full viewport width) */
+    .intro__background__right .intro__background__logo {
+        left: calc(var(--spacing-l) - 50vw);
     }
 
-    .intro__background__right .intro__background__line {
-        left: auto;
-        right: var(--kb-wordmark-inset);
+    /* Short laptop / MacBook: a bit smaller so faces stay clearer */
+    @media (max-height: 900px) {
+        .intro__background__logo,
+        .intro__background__line {
+            transform: scale(0.72);
+            transform-origin: center top;
+        }
+    }
+
+    @media (max-height: 780px) {
+        .intro__background__logo,
+        .intro__background__line {
+            transform: scale(0.64);
+            transform-origin: center top;
+        }
     }
 
     /* Next control at the center seam */
@@ -167,21 +147,8 @@
     }
 }
 
-/* KINDSBERG wordmark on intro preloader: full size (shrinks after intro on hero) */
-.preloader--intro {
-    --kb-wordmark-scale: 1;
-    --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
-    --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
-    --kb-wordmark-shift-y: 0px;
-    --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
-}
-
+/* KINDSBERG wordmark on intro preloader: full size (hero shrinks after via transform) */
 .preloader--intro .preloader__content svg {
-    width: var(--kb-wordmark-width);
-    left: var(--kb-wordmark-inset);
-    right: auto;
-    top: var(--kb-wordmark-top);
-    transform: none;
     overflow: visible;
 }
 
@@ -198,13 +165,8 @@
         right: auto;
         top: auto;
         overflow: visible;
-        /* Extra right room so Safari doesn't clip the G glyph */
         padding-right: 2.5%;
         box-sizing: border-box;
-    }
-
-    .preloader--intro .preloader__content svg text {
-        letter-spacing: 1.2px;
     }
 
     .intro__top__logo,
@@ -215,11 +177,6 @@
 
     .intro__top__logo .icon {
         width: 96%;
-        max-width: 100%;
-    }
-
-    .header__logo .icon-logo {
-        width: auto;
         max-width: 100%;
     }
 }

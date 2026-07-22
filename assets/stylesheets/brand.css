@@ -504,27 +504,6 @@ body {
 }
 
 
-/*
- * Solutions title (#architecture): lock the LARGE size.
- *
- * landing.js scroll timeline removes .architecture__title--large and
- * tweens font-size/letter-spacing, so different scroll progress looked
- * like a localhost-vs-Vercel mismatch. Same font-size in both states
- * makes that tween a no-op (same pattern as .location__title above).
- * No JS — fighting removeClass with MutationObserver froze navigation.
- */
-#architecture .architecture__title,
-#architecture .architecture__title--large {
-    font-size: calc(var(--layout-width) * 0.152) !important;
-}
-
-@media only screen and (min-width: 1440px) and (min-height: 750px) {
-    #architecture .architecture__title,
-    #architecture .architecture__title--large {
-        font-size: calc(var(--layout-width) * 0.162) !important;
-    }
-}
-
 /* territory services: hide deco leftovers */
 .page-territory .infra-intro__deco,
 .page-territory [class*="__deco"],

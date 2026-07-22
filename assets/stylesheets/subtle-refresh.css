@@ -133,29 +133,28 @@
     }
 
     /*
-     * People photo: keep faces BELOW the wordmark band on all desktop sizes.
-     * Lower object-position % = heads sit lower in the frame (clear of logo).
-     * MacBook short viewports need the most aggressive crop.
+     * People photo: faces clear of wordmark, then nudged UP 20%.
+     * Higher object-position % = subjects move up in the frame.
      */
     .intro__background__right .intro__background__content img {
-        object-position: center 36% !important;
+        object-position: center 56% !important;
     }
 
     @media (max-height: 920px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 28% !important;
+            object-position: center 48% !important;
         }
     }
 
     @media (max-height: 800px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 24% !important;
+            object-position: center 44% !important;
         }
     }
 
     @media (min-height: 1000px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 48% !important;
+            object-position: center 68% !important;
         }
     }
 }

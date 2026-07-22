@@ -38,10 +38,9 @@
     }
 
     /*
-     * KINDSBERG wordmark: shared scale for hero + preloader handoff.
-     * +20% larger than prior scales; +5% lower via --kb-wordmark-shift-y.
-     * Shrink with transform only (do NOT change width/left — that broke
-     * the split and made the hero look truncated).
+     * KINDSBERG wordmark: shared scale for hero + preloader.
+     * On short MacBook viewports: smaller + less downward shift so faces
+     * can sit above the letter band.
      */
     .intro__background,
     .preloader--intro {
@@ -53,14 +52,16 @@
     @media (max-height: 900px) {
         .intro__background,
         .preloader--intro {
-            --kb-wordmark-scale: 0.864;
+            --kb-wordmark-scale: 0.78;
+            --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.02);
         }
     }
 
     @media (max-height: 780px) {
         .intro__background,
         .preloader--intro {
-            --kb-wordmark-scale: 0.768;
+            --kb-wordmark-scale: 0.7;
+            --kb-wordmark-shift-y: 0px;
         }
     }
 
@@ -133,28 +134,28 @@
     }
 
     /*
-     * People photo: nudged UP (+20% then +15% more).
-     * Higher object-position % = subjects move up in the frame.
+     * People photo: nudge UP so heads clear above the KINDSBERG band.
+     * (MacBook: woman was behind the B — need heads higher, not lower.)
      */
     .intro__background__right .intro__background__content img {
-        object-position: center 71% !important;
+        object-position: center 81% !important;
     }
 
     @media (max-height: 920px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 63% !important;
+            object-position: center 78% !important;
         }
     }
 
     @media (max-height: 800px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 59% !important;
+            object-position: center 74% !important;
         }
     }
 
     @media (min-height: 1000px) {
         .intro__background__right .intro__background__content img {
-            object-position: center 83% !important;
+            object-position: center 88% !important;
         }
     }
 }
@@ -169,13 +170,15 @@
 
     @media (max-height: 900px) {
         .preloader--intro {
-            --kb-wordmark-scale: 0.864;
+            --kb-wordmark-scale: 0.78;
+            --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.02);
         }
     }
 
     @media (max-height: 780px) {
         .preloader--intro {
-            --kb-wordmark-scale: 0.768;
+            --kb-wordmark-scale: 0.7;
+            --kb-wordmark-shift-y: 0px;
         }
     }
 

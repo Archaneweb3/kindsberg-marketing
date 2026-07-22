@@ -64,51 +64,51 @@
  */
 #architecture .architecture__title,
 #architecture .architecture__title--large {
-    font-size: calc(var(--layout-width) * 0.152) !important;
+    font-size: calc(var(--layout-width) * 0.1216) !important;
 }
 
 @media only screen and (min-width: 1440px) and (min-height: 750px) {
     #architecture .architecture__title,
     #architecture .architecture__title--large {
-        font-size: calc(var(--layout-width) * 0.162) !important;
+        font-size: calc(var(--layout-width) * 0.1296) !important;
     }
 }
 
 #interior .interior__title,
 #interior .interior__title--large {
-    font-size: calc(var(--layout-width) * 0.2179) !important;
+    font-size: calc(var(--layout-width) * 0.17432) !important;
 }
 
 @media only screen and (min-width: 1440px) and (min-height: 750px) {
     #interior .interior__title,
     #interior .interior__title--large {
-        font-size: calc(var(--layout-width) * 0.2279) !important;
+        font-size: calc(var(--layout-width) * 0.18232) !important;
     }
 }
 
 #territory .territory__title,
 #territory .territory__title--large {
-    font-size: calc(var(--layout-width) * 0.167) !important;
+    font-size: calc(var(--layout-width) * 0.1336) !important;
 }
 
 @media (min-width: 1200px) and (min-height: 600px) and (max-height: 760px) {
     #territory .territory__title,
     #territory .territory__title--large {
-        font-size: calc(var(--layout-width) * 0.1725) !important;
+        font-size: calc(var(--layout-width) * 0.138) !important;
     }
 }
 
 @media only screen and (min-width: 1440px) and (min-height: 750px) {
     #territory .territory__title,
     #territory .territory__title--large {
-        font-size: calc(var(--layout-width) * 0.1785) !important;
+        font-size: calc(var(--layout-width) * 0.1428) !important;
     }
 }
 
 @media (min-width: 1440px) and (min-height: 750px) and (max-height: 920px) {
     #territory .territory__title,
     #territory .territory__title--large {
-        font-size: calc(var(--layout-width) * 0.1725) !important;
+        font-size: calc(var(--layout-width) * 0.138) !important;
     }
 }
 

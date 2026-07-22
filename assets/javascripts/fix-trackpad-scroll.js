@@ -1,11 +1,11 @@
 /* Mac trackpad unlock for index.html scrollController.
  *
- * Ever's wheel plugin locks after a section change (wheelIgnore) and only unlocks on a
- * 120ms debounced "wheel stop". Trackpad inertia keeps resetting that debounce, so scroll
- * feels frozen until the gesture fully dies — often when the user moves the mouse.
+ * Ever's wheel plugin used to clear wheelIgnore on a 120ms "wheel stop" debounce.
+ * Trackpad inertia kept unlocking mid-gesture → section skip / back-and-forth.
+ * landing.js now keeps ignore until a timed cooldown (~900ms) after next/prev.
  *
- * landing.js already has the main fix (boundary scrollMode + timed unlock). This file is a
- * safety net: if ignore is still stuck >700ms, force-clear on the next wheel/pointer move.
+ * This file is a safety net only: if ignore is still stuck well past that
+ * cooldown (>1200ms), force-clear on the next wheel/pointer move.
  */
 (function () {
   'use strict';
@@ -33,6 +33,10 @@
     if (!controller || !wheel) return;
     wheel.wheelIgnore = false;
     wheel.wheelDeltaSum = 0;
+    if (wheel._kbWheelUnlock) {
+      clearTimeout(wheel._kbWheelUnlock);
+      wheel._kbWheelUnlock = null;
+    }
     if (controller.scrollMode === 1 || controller.scrollMode === 2) {
       controller.scrollMode = 0;
     }
@@ -47,7 +51,8 @@
 
     if (wheel.wheelIgnore) {
       if (!stuckSince) stuckSince = Date.now();
-      if (Date.now() - stuckSince > 700) unlock(controller, wheel);
+      // Must be longer than landing.js section-change cooldown (900ms)
+      if (Date.now() - stuckSince > 1200) unlock(controller, wheel);
     } else {
       stuckSince = 0;
     }

@@ -37,9 +37,39 @@
         --clip-path-w: 0;
     }
 
-    /* Logo in the right pane pulled back to viewport left */
+    /*
+     * KINDSBERG wordmark: full size (restored),
+     * shifted down 10% of usable viewport (was 20%, raised 10%).
+     * Keep left/right halves aligned across the split.
+     */
+    .intro__background {
+        --kb-wordmark-scale: 1;
+        --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
+        --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
+        --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+        --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
+        --kb-wordmark-height: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale) * 0.28369);
+    }
+
+    .intro__background__logo {
+        width: var(--kb-wordmark-width);
+        left: var(--kb-wordmark-inset);
+        top: var(--kb-wordmark-top);
+    }
+
     .intro__background__right .intro__background__logo {
-        left: calc(var(--spacing-l) - 50vw);
+        left: calc(var(--kb-wordmark-inset) - 50vw);
+    }
+
+    .intro__background__line {
+        width: var(--kb-wordmark-width);
+        left: var(--kb-wordmark-inset);
+        top: calc(var(--kb-wordmark-top) + var(--spacing-s) + var(--kb-wordmark-height));
+    }
+
+    .intro__background__right .intro__background__line {
+        left: auto;
+        right: var(--kb-wordmark-inset);
     }
 
     /* Next control at the center seam */
@@ -91,9 +121,60 @@
         --intro-radius: 1.85rem;
     }
 
-    /* People photo (right): shift crop so subjects move UP in the frame */
+    /*
+     * People photo (right): keep faces below the KINDSBERG logo.
+     * 92% pushed subjects too high on short laptop viewports (MacBook).
+     * Tune by viewport height — not by deploy target (local === Vercel).
+     */
     .intro__background__right .intro__background__content img {
-        object-position: center 92% !important;
+        object-position: center 58% !important;
+    }
+
+    /* Short / laptop viewports: faces mid-lower, clear of logo band */
+    @media (max-height: 920px) {
+        .intro__background__right .intro__background__content img {
+            object-position: center 44% !important;
+        }
+    }
+
+    /* Very short usable height (browser chrome + dock) */
+    @media (max-height: 800px) {
+        .intro__background__right .intro__background__content img {
+            object-position: center 38% !important;
+        }
+    }
+
+    /* Tall monitors: mild upward bias for composition */
+    @media (min-height: 1000px) {
+        .intro__background__right .intro__background__content img {
+            object-position: center 70% !important;
+        }
+    }
+}
+
+/* KINDSBERG wordmark on intro preloader: full size, +10% lower (match hero) */
+.preloader--intro {
+    --kb-wordmark-scale: 1;
+    --kb-wordmark-width: calc((100vw - var(--spacing-l) * 2) * var(--kb-wordmark-scale));
+    --kb-wordmark-inset: calc((100vw - var(--kb-wordmark-width)) / 2);
+    --kb-wordmark-shift-y: calc((var(--viewport-height, 100vh) - var(--header-height)) * 0.05);
+    --kb-wordmark-top: calc(var(--header-height) + var(--spacing-s) + var(--kb-wordmark-shift-y));
+}
+
+.preloader--intro .preloader__content svg {
+    width: var(--kb-wordmark-width);
+    left: var(--kb-wordmark-inset);
+    right: auto;
+    top: var(--kb-wordmark-top);
+    transform: none;
+}
+
+@media only screen and (max-width: 979px) {
+    .preloader--intro .preloader__content svg {
+        width: calc(100% - var(--spacing-l) * 2);
+        left: var(--spacing-l);
+        right: auto;
+        top: auto;
     }
 }
 

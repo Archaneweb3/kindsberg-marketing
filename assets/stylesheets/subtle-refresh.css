@@ -10,6 +10,7 @@
 /* Hero                                                                       */
 /* Desktop split: 50% / 50%                                                   */
 /* Left = building video · Right = people image                               */
+/* Default open: RIGHT (people). LEFT (video) starts as peek until hover.     */
 /* -------------------------------------------------------------------------- */
 @media only screen and (min-width: 980px) {
     .intro__background__left {
@@ -20,6 +21,20 @@
     .intro__background__right {
         flex: 0 0 50% !important;
         max-width: 50%;
+    }
+
+    /* Load animation: expand the left peek (video) when default is --2 */
+    .animation--landing-animation .intro__background--2 .intro__background__left {
+        --transition-duration: 1.6s;
+        --transition-easing: cubic-bezier(0.25, 0.74, 0.22, 0.99);
+        transition-property: clip-path, -webkit-clip-path;
+        transition-duration: var(--transition-duration);
+        transition-timing-function: var(--transition-easing);
+    }
+
+    .animation--landing-animation--inactive .intro__background--2 .intro__background__left {
+        --clip-path-h: 0;
+        --clip-path-w: 0;
     }
 
     /* Logo in the right pane pulled back to viewport left */

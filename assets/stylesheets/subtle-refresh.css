@@ -38,36 +38,38 @@
     }
 
     /*
-     * KINDSBERG wordmark: keep Ever full-span left/right alignment.
+     * KINDSBERG wordmark: shared scale for hero + preloader handoff.
      * Shrink with transform only (do NOT change width/left — that broke
      * the split and made the hero look truncated).
      */
+    .intro__background,
+    .preloader--intro {
+        --kb-wordmark-scale: 0.86;
+    }
+
+    @media (max-height: 900px) {
+        .intro__background,
+        .preloader--intro {
+            --kb-wordmark-scale: 0.72;
+        }
+    }
+
+    @media (max-height: 780px) {
+        .intro__background,
+        .preloader--intro {
+            --kb-wordmark-scale: 0.64;
+        }
+    }
+
     .intro__background__logo,
     .intro__background__line {
-        transform: scale(0.86);
+        transform: scale(var(--kb-wordmark-scale));
         transform-origin: center top;
     }
 
     /* Right pane logo offset — original Ever math (full viewport width) */
     .intro__background__right .intro__background__logo {
         left: calc(var(--spacing-l) - 50vw);
-    }
-
-    /* Short laptop / MacBook: a bit smaller so faces stay clearer */
-    @media (max-height: 900px) {
-        .intro__background__logo,
-        .intro__background__line {
-            transform: scale(0.72);
-            transform-origin: center top;
-        }
-    }
-
-    @media (max-height: 780px) {
-        .intro__background__logo,
-        .intro__background__line {
-            transform: scale(0.64);
-            transform-origin: center top;
-        }
     }
 
     /* Next control at the center seam */
@@ -147,9 +149,34 @@
     }
 }
 
-/* KINDSBERG wordmark on intro preloader: full size (hero shrinks after via transform) */
-.preloader--intro .preloader__content svg {
-    overflow: visible;
+/* KINDSBERG wordmark on intro preloader — same size/position as hero */
+@media only screen and (min-width: 980px) {
+    .preloader--intro {
+        --kb-wordmark-scale: 0.86;
+    }
+
+    @media (max-height: 900px) {
+        .preloader--intro {
+            --kb-wordmark-scale: 0.72;
+        }
+    }
+
+    @media (max-height: 780px) {
+        .preloader--intro {
+            --kb-wordmark-scale: 0.64;
+        }
+    }
+
+    .preloader--intro .preloader__content svg {
+        left: var(--spacing-l);
+        right: auto;
+        width: calc(100vw - var(--spacing-l) * 2);
+        top: calc(var(--header-height) + var(--spacing-s));
+        bottom: auto;
+        transform: scale(var(--kb-wordmark-scale));
+        transform-origin: center top;
+        overflow: visible;
+    }
 }
 
 @media only screen and (max-width: 979px) {
@@ -167,6 +194,7 @@
         overflow: visible;
         padding-right: 2.5%;
         box-sizing: border-box;
+        transform: none;
     }
 
     .intro__top__logo,
